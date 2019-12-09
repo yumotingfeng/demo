@@ -1,18 +1,21 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FileDto;
 import com.example.demo.dto.Result;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.exception.MyException;
 import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -44,8 +47,29 @@ public class UserController {
         return Result.success(null);
     }
 
-    @GetMapping("/testException")
-    public void testException() throws MyException {
-        throw new MyException(1002, "test1");
+    @PostMapping("/upload")
+    public Result<FileDto> upload(@RequestParam("file") MultipartFile multipartFile) throws MyException {
+        if (multipartFile.isEmpty()) {
+            throw new MyException(1003, "上传文件为空");
+        }
+//        String path = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "static/";
+        String path = "/usr/local/nginx/html/pic/";
+        String originalFilename = multipartFile.getOriginalFilename();
+        assert originalFilename != null;
+        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String FileName = UUID.randomUUID() + ext;
+        File file = new File(path + FileName);
+        if (!file.isDirectory()) {
+            file.mkdirs();
+        }
+        try {
+            multipartFile.transferTo(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new MyException(1004, "文件保存失败");
+        }
+        FileDto fileDto = new FileDto();
+        fileDto.setUrl(FileName);
+        return Result.success(fileDto);
     }
 }
