@@ -1,4 +1,4 @@
-package com.example.demo.exception;
+package com.demo.exception;
 
 public class MyException extends Exception {
     private Integer code = 0;

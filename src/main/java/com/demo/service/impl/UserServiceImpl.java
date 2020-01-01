@@ -1,10 +1,10 @@
-package com.example.demo.service.impl;
+package com.demo.service.impl;
 
-import com.example.demo.dao.UserDao;
-import com.example.demo.dto.UserDto;
-import com.example.demo.entity.User;
-import com.example.demo.exception.MyException;
-import com.example.demo.service.UserService;
+import com.demo.service.UserService;
+import com.demo.mapper.UserDao;
+import com.demo.dto.UserDto;
+import com.demo.domain.User;
+import com.demo.exception.MyException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

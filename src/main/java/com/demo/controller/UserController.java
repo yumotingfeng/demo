@@ -1,12 +1,11 @@
-package com.example.demo.controller;
+package com.demo.controller;
 
-import com.example.demo.dto.FileDto;
-import com.example.demo.dto.Result;
-import com.example.demo.dto.UserDto;
-import com.example.demo.entity.User;
-import com.example.demo.exception.MyException;
-import com.example.demo.service.UserService;
-import org.springframework.util.ClassUtils;
+import com.demo.dto.FileDto;
+import com.demo.dto.Result;
+import com.demo.dto.UserDto;
+import com.demo.domain.User;
+import com.demo.exception.MyException;
+import com.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

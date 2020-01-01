@@ -1,14 +1,12 @@
-package com.example.demo.dao;
+package com.demo.service;
 
-import com.example.demo.dto.UserDto;
-import com.example.demo.entity.User;
-import com.example.demo.exception.MyException;
-import org.apache.ibatis.annotations.Mapper;
+import com.demo.dto.UserDto;
+import com.demo.domain.User;
+import com.demo.exception.MyException;
 
 import java.util.List;
 
-@Mapper
-public interface UserDao {
+public interface UserService {
     public List<User> getUsers(UserDto userDto) throws MyException;
 
     public Integer userCounts() throws MyException;

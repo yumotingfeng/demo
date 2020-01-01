@@ -1,4 +1,4 @@
-package com.example.demo.enums;
+package com.demo.enums;
 
 public enum WeekDay {
     MONDAY("星期一", 1);
