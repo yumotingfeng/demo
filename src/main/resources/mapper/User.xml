@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.demo.mapper.UserDao">
     <select id="getUsers" resultType="com.demo.domain.User">
-        select * from user limit #{page},#{pageSize}
+        select * from user order by id desc limit #{page},#{pageSize}
     </select>
     <insert id="addUser">
         insert into user (
