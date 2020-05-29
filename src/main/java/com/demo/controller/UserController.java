@@ -1,121 +1,69 @@
 package com.demo.controller;
 
-import com.demo.dto.FileDto;
-import com.demo.dto.Result;
-import com.demo.dto.UserDto;
-import com.demo.domain.User;
-import com.demo.exception.MyException;
-import com.demo.service.UserService;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.demo.entity.User;
+import com.demo.req.Result;
+import com.demo.req.UserReq;
+import com.demo.service.imp.UserServiceImp;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
+
+/**
+ * @author daijh
+ */
 @RestController
 public class UserController {
+
     @Resource
-    private UserService userService;
-
-    private final String KEY = "code";
-
-    private final String EXPIRED = "expired";
+    private UserServiceImp userServiceImp;
 
     @GetMapping("/getUsers")
-    public Result<List<User>> getUsers(@Valid UserDto userDto) throws MyException {
-        List<User> users = userService.getUsers(userDto);
-        Integer total = userService.userCounts();
-        return Result.success(users, total);
+    public Result<List<User>> getUsers(UserReq userReq) {
+        Page<User> page = new Page<>(1, 3);
+        Page<User> userPage = userServiceImp.page(page);
+        return Result.success(userPage.getRecords(), userPage.getTotal());
     }
 
-    @PostMapping("/addUser")
-    public Result<Object> addUser(@Valid @RequestBody User user) throws MyException {
-        userService.addUser(user);
-        return Result.success(null);
+    @GetMapping("/test1")
+    public RedirectView test1() {
+        RedirectView redirectTarget = new RedirectView();
+        redirectTarget.setContextRelative(true);
+        redirectTarget.setUrl("test2");
+        return redirectTarget;
     }
 
-    @PostMapping("/updateUser")
-    public Result<Object> updateUser(@RequestBody User user) throws MyException {
-        userService.updateUser(user);
-        return Result.success(null);
+    @GetMapping("/test2")
+    public RedirectView test2() {
+        RedirectView redirectTarget = new RedirectView();
+        redirectTarget.setContextRelative(true);
+        redirectTarget.setUrl("test3");
+        return redirectTarget;
     }
 
-    @PostMapping("/deleteUser")
-    public Result<Object> deleteUser(@NotNull @RequestBody User user) throws MyException {
-        userService.deleteUser(user.getId());
-        return Result.success(null);
+    @GetMapping("/test3")
+    public RedirectView test3() {
+        RedirectView redirectTarget = new RedirectView();
+        redirectTarget.setContextRelative(true);
+        redirectTarget.setUrl("test4");
+        return redirectTarget;
     }
 
-    @PostMapping("/upload")
-    public Result<FileDto> upload(@NotNull @RequestParam("file") MultipartFile multipartFile) throws MyException {
-        if (multipartFile.isEmpty()) {
-            throw new MyException(1003, "上传文件为空");
-        }
-//        String path = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "static/";
-        String path = "/usr/local/nginx/html/pic/";
-        String originalFilename = multipartFile.getOriginalFilename();
-        assert originalFilename != null;
-        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String FileName = UUID.randomUUID() + ext;
-        File file = new File(path + FileName);
-        if (!file.isDirectory()) {
-            boolean b = file.mkdirs();
-            if (!b) {
-                throw new MyException(1005, "文件夹创建失败");
-            }
-        }
-        try {
-            multipartFile.transferTo(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new MyException(1004, "文件保存失败");
-        }
-        FileDto fileDto = new FileDto();
-        fileDto.setUrl(FileName);
-        return Result.success(fileDto);
+    @GetMapping("/test4")
+    public RedirectView test4() {
+        RedirectView redirectTarget = new RedirectView();
+        redirectTarget.setContextRelative(true);
+        redirectTarget.setUrl("test5");
+        return redirectTarget;
     }
 
-    @GetMapping("/captcha")
-    public Result<Integer> captcha(@NotNull HttpServletRequest request) {
-        int code = (int) ((Math.random() * 9 + 1) * 100000);
-        HttpSession session = request.getSession();
-        int time = (int) (new Date().getTime() / 1000);
-        session.setAttribute(KEY, code);
-        session.setAttribute(EXPIRED, time);
-        return Result.success(code);
-    }
-
-    @GetMapping("checkCaptcha")
-    public Result<Integer> checkCaptcha(@NotNull HttpServletRequest request) throws MyException {
-        HttpSession session = request.getSession();
-        int code = (int) session.getAttribute(KEY);
-        int now = (int) (new Date().getTime() / 1000);
-        int time = (int) session.getAttribute(EXPIRED);
-
-        if (now - time >= 60) {
-            throw new MyException(2000, "验证码过期");
-        }
-        String inputCode = request.getParameter("code");
-
-        if (inputCode == null) {
-            throw new MyException(2000, "验证码不能为空");
-        }
-
-        int strCode = Integer.parseInt(inputCode);
-
-        if (strCode != code) {
-            throw new MyException(2000, "验证码不匹配");
-        }
-
-        return Result.success(code);
+    @GetMapping("/test5")
+    public String test5() {
+        return "success this is a test5";
     }
 
     public static void main(String[] args) {

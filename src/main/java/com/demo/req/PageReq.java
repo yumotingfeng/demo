@@ -1,4 +1,4 @@
-package com.demo.dto;
+package com.demo.req;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserDto {
+public class PageReq {
     @NotNull(message = "page当前页码不能为空")
     @Min(value = 1, message = "当前页码最小为1")
     private Integer page;

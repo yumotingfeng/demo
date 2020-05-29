@@ -1,6 +1,6 @@
 package com.demo.exception;
 
-import com.demo.dto.Result;
+import com.demo.req.Result;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,4 +1,4 @@
-package com.demo.dto;
+package com.demo.req;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ public class Result<T> {
     private Integer code;
     private String message;
     private T data;
-    private Integer total = 0;
+    private Long total = 0L;
 
     public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>();
@@ -17,7 +17,7 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> success(T data, Integer total) {
+    public static <T> Result<T> success(T data, Long total) {
         Result<T> result = Result.success(data);
         result.setTotal(total);
         return result;
